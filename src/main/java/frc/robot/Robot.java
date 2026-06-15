@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -71,4 +72,29 @@ public class Robot extends TimedRobot {
     }
 
   }
+
+  public void updateSmartDashboard() {
+    // This method can be used to send data to the SmartDashboard for debugging purposes
+    SmartDashboard.putNumber("Left/Motor Output", m_leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Right/Motor Output", m_rightMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Ball/Motor Output", m_ballMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Left/Motor Temperature", m_leftMotor.getMotorTemperature());
+    SmartDashboard.putNumber("Right/Motor Temperature", m_rightMotor.getMotorTemperature());  
+    SmartDashboard.putNumber("Ball/Motor Temperature", m_ballMotor.getMotorTemperature());  
+    SmartDashboard.putNumber("Left/Motor Current", m_leftMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Right/Motor Current", m_rightMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Ball/Motor Current", m_ballMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Left/Motor Voltage", m_leftMotor.getBusVoltage());
+    SmartDashboard.putNumber("Right/Motor Voltage", m_rightMotor.getBusVoltage());
+    SmartDashboard.putNumber("Ball/Motor Voltage", m_ballMotor.getBusVoltage());
+    SmartDashboard.putNumber("Left/Motor RPM", m_leftMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Right/Motor RPM", m_rightMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Ball/Motor RPM", m_ballMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Left/Motor Position", m_leftMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Right/Motor Position", m_rightMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Ball/Motor Position", m_ballMotor.getEncoder().getPosition());
+    SmartDashboard.putData(m_robotDrive);
+
+  }
+
 }
