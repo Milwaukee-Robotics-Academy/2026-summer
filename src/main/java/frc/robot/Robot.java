@@ -59,7 +59,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Drive with arcade style (use right stick to steer and left stick to drive)
-    m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+    //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+    m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
 
     // Use the triggers to control the ball motor
     
