@@ -57,6 +57,20 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void robotInit() {
+    // This function is run when the robot is first started up and should be used for any
+    // initialization code.
+  }
+
+  @Override
+  public void robotPeriodic() {
+    // This function is called every robot packet, no matter the mode. Use this for items like
+    // diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+    // This runs after the mode specific periodic functions, but before LiveWindow and
+    // SmartDashboard integrated updating.
+    updateSmartDashboard();
+  }
+  @Override
   public void teleopPeriodic() {
     // Drive with arcade style (use right stick to steer and left stick to drive)
     //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
