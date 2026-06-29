@@ -59,7 +59,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Drive with arcade style (use right stick to steer and left stick to drive)
-    m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+    //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+    m_robotDrive.tankDrive(-driverController.getLeftY(), -driverController.getRightY());
 
     // Use the triggers to control the ball motor
     
@@ -74,27 +75,52 @@ public class Robot extends TimedRobot {
   }
 
   public void updateSmartDashboard() {
+    updateDriverControllerValues();
     // This method can be used to send data to the SmartDashboard for debugging purposes
-    SmartDashboard.putNumber("Left/Motor Output", m_leftMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Right/Motor Output", m_rightMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Ball/Motor Output", m_ballMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Left/Motor Temperature", m_leftMotor.getMotorTemperature());
-    SmartDashboard.putNumber("Right/Motor Temperature", m_rightMotor.getMotorTemperature());  
-    SmartDashboard.putNumber("Ball/Motor Temperature", m_ballMotor.getMotorTemperature());  
-    SmartDashboard.putNumber("Left/Motor Current", m_leftMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Right/Motor Current", m_rightMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Ball/Motor Current", m_ballMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Left/Motor Voltage", m_leftMotor.getBusVoltage());
-    SmartDashboard.putNumber("Right/Motor Voltage", m_rightMotor.getBusVoltage());
-    SmartDashboard.putNumber("Ball/Motor Voltage", m_ballMotor.getBusVoltage());
-    SmartDashboard.putNumber("Left/Motor RPM", m_leftMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Right/Motor RPM", m_rightMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Ball/Motor RPM", m_ballMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Left/Motor Position", m_leftMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Right/Motor Position", m_rightMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Ball/Motor Position", m_ballMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("LeftMotor/Output", m_leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("RightMotor/Output", m_rightMotor.getAppliedOutput());
+    SmartDashboard.putNumber("BallMotor/Output", m_ballMotor.getAppliedOutput());
+    SmartDashboard.putNumber("LeftMotor/Temperature", m_leftMotor.getMotorTemperature());
+    SmartDashboard.putNumber("RightMotor/Temperature", m_rightMotor.getMotorTemperature());  
+    SmartDashboard.putNumber("BallMotor/Temperature", m_ballMotor.getMotorTemperature());  
+    SmartDashboard.putNumber("LeftMotor/Current", m_leftMotor.getOutputCurrent());
+    SmartDashboard.putNumber("RightMotor/Current", m_rightMotor.getOutputCurrent());
+    SmartDashboard.putNumber("BallMotor/Current", m_ballMotor.getOutputCurrent());
+    SmartDashboard.putNumber("LeftMotor/Voltage", m_leftMotor.getBusVoltage());
+    SmartDashboard.putNumber("RightMotor/Voltage", m_rightMotor.getBusVoltage());
+    SmartDashboard.putNumber("BallMotor/Voltage", m_ballMotor.getBusVoltage());
+    SmartDashboard.putNumber("LeftMotor/RPM", m_leftMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("RightMotor/RPM", m_rightMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("BallMotor/RPM", m_ballMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("LeftMotor/Position", m_leftMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("RightMotor/Position", m_rightMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("BallMotor/Position", m_ballMotor.getEncoder().getPosition());
     SmartDashboard.putData(m_robotDrive);
 
+  }
+
+  private void updateDriverControllerValues() {
+    SmartDashboard.putNumber("DriverController/Left Stick Y", driverController.getLeftY());
+    SmartDashboard.putNumber("DriverController/Left Stick X", driverController.getLeftX());
+    SmartDashboard.putNumber("DriverController/Right Stick Y", driverController.getRightY());
+    SmartDashboard.putNumber("DriverController/Right Stick X", driverController.getRightX());
+    SmartDashboard.putNumber("DriverController/Left Trigger", driverController.getLeftTriggerAxis());
+    SmartDashboard.putNumber("DriverController/Right Trigger", driverController.getRightTriggerAxis()); 
+    SmartDashboard.putBoolean("DriverController/A Button", driverController.getAButton());
+    SmartDashboard.putBoolean("DriverController/B Button", driverController.getBButton());
+    SmartDashboard.putBoolean("DriverController/X Button", driverController.getXButton());
+    SmartDashboard.putBoolean("DriverController/Y Button", driverController.getYButton());
+    SmartDashboard.putBoolean("DriverController/Left Bumper", driverController.getLeftBumper());
+    SmartDashboard.putBoolean("DriverController/Right Bumper", driverController.getRightBumper());
+    SmartDashboard.putBoolean("DriverController/Back Button", driverController.getBackButton());
+    SmartDashboard.putBoolean("DriverController/Start Button", driverController.getStartButton());
+    SmartDashboard.putBoolean("DriverController/Left Stick Button", driverController.getLeftStickButton());
+    SmartDashboard.putBoolean("DriverController/Right Stick Button", driverController.getRightStickButton()); 
+    SmartDashboard.putNumber("DriverController/Pov", driverController.getPOV());
+    SmartDashboard.putNumber("DriverController/Port", driverController.getPort());
+    SmartDashboard.putNumber("DriverController/Axis Count", driverController.getAxisCount());
+    SmartDashboard.putNumber("DriverController/Button Count", driverController.getButtonCount());
+    // This method can be used to read values from the driver controller and update any necessary variables
   }
 
 }
