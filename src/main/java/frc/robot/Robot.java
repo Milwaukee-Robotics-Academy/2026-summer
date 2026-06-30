@@ -90,9 +90,9 @@ public class Robot extends TimedRobot {
     // Use the triggers to control the ball motor
     
     if (driverController.getRightTriggerAxis() > 0.5) {
-      m_ballMotor.set(1.0);
+      m_ballMotor.set(0.5);
     } else if (driverController.getLeftTriggerAxis() > 0.5) {
-      m_ballMotor.set(-1.0);
+      m_ballMotor.set(-0.5);
     } else {
       m_ballMotor.set(0.0);
     }
