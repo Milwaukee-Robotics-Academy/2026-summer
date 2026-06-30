@@ -23,58 +23,69 @@ import com.revrobotics.spark.config.SparkMaxConfig;
  * the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-  private final DifferentialDrive m_robotDrive;
-  private final XboxController driverController = new XboxController(0);
+    private static final double SPEED_LIMIT = 0.6;
+    private final DifferentialDrive m_robotDrive;
+    private final XboxController driverController = new XboxController(0);
+  
+    private final SparkMax m_leftMotor = new SparkMax(1 , MotorType.kBrushless);
+    private final SparkMax m_rightMotor = new SparkMax(2 , MotorType.kBrushless);
+    private final SparkMax m_ballMotor = new SparkMax(3 , MotorType.kBrushless);
+    private final SparkMaxConfig defaultConfig = new SparkMaxConfig();
+    private final SparkMaxConfig rightDriveConfig = new SparkMaxConfig();
+    private final SparkMaxConfig ballMotorConfig = new SparkMaxConfig();
+  
+    /** Called once at the beginning of the robot program. */
+    public Robot() {
+  
+      defaultConfig
+          .inverted(false)
+          .idleMode(IdleMode.kBrake)
+          .openLoopRampRate(0.5)
+          .voltageCompensation(12.0)
+          .smartCurrentLimit(20);
+  
+      // We need to invert one side of the drivetrain so that positive voltages
+      // result in both sides moving forward. Depending on how your robot's
+      // gearbox is constructed, you might have to invert the left side instead.
+      rightDriveConfig.apply(defaultConfig)
+          .inverted(true);
+      
+      ballMotorConfig.apply(defaultConfig)
+          .inverted(false)
+          .idleMode(IdleMode.kBrake)
+          .openLoopRampRate(0.0)
+          .smartCurrentLimit(20);
+  
+      m_leftMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      m_rightMotor.configure(rightDriveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      m_ballMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      m_robotDrive = new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
+  
+      SendableRegistry.addChild(m_robotDrive, m_leftMotor);
+      SendableRegistry.addChild(m_robotDrive, m_rightMotor);
+    }
+  
+    @Override
+    public void robotInit() {
+      // This function is run when the robot is first started up and should be used for any
+      // initialization code.
+    }
+  
+    @Override
+    public void robotPeriodic() {
+      // This function is called every robot packet, no matter the mode. Use this for items like
+      // diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+      // This runs after the mode specific periodic functions, but before LiveWindow and
+      // SmartDashboard integrated updating.
+      updateSmartDashboard();
+    }
+    @Override
+    public void teleopPeriodic() {
+      // Drive with arcade style (use right stick to steer and left stick to drive)
+      //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+      //m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
+      m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
 
-  private final SparkMax m_leftMotor = new SparkMax(1 , MotorType.kBrushless);
-  private final SparkMax m_rightMotor = new SparkMax(2 , MotorType.kBrushless);
-  private final SparkMax m_ballMotor = new SparkMax(3 , MotorType.kBrushless);
-  private final SparkMaxConfig defaultConfig = new SparkMaxConfig();
-  private final SparkMaxConfig rightDriveConfig = new SparkMaxConfig();
-
-  /** Called once at the beginning of the robot program. */
-  public Robot() {
-
-    defaultConfig
-        .inverted(false)
-        .idleMode(IdleMode.kBrake)
-        .openLoopRampRate(0.5)
-        .smartCurrentLimit(80);
-
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    rightDriveConfig.apply(defaultConfig)
-        .inverted(true);
-
-    m_leftMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_rightMotor.configure(rightDriveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_ballMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_robotDrive = new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
-
-    SendableRegistry.addChild(m_robotDrive, m_leftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rightMotor);
-  }
-
-  @Override
-  public void robotInit() {
-    // This function is run when the robot is first started up and should be used for any
-    // initialization code.
-  }
-
-  @Override
-  public void robotPeriodic() {
-    // This function is called every robot packet, no matter the mode. Use this for items like
-    // diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-    // This runs after the mode specific periodic functions, but before LiveWindow and
-    // SmartDashboard integrated updating.
-    updateSmartDashboard();
-  }
-  @Override
-  public void teleopPeriodic() {
-    // Drive with arcade style (use right stick to steer and left stick to drive)
-    //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
-    m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
 
     // Use the triggers to control the ball motor
     
@@ -114,22 +125,22 @@ public class Robot extends TimedRobot {
   }
 
   private void updateDriverControllerValues() {
-    SmartDashboard.putNumber("DriverController/Left Stick Y", driverController.getLeftY());
-    SmartDashboard.putNumber("DriverController/Left Stick X", driverController.getLeftX());
-    SmartDashboard.putNumber("DriverController/Right Stick Y", driverController.getRightY());
-    SmartDashboard.putNumber("DriverController/Right Stick X", driverController.getRightX());
-    SmartDashboard.putNumber("DriverController/Left Trigger", driverController.getLeftTriggerAxis());
-    SmartDashboard.putNumber("DriverController/Right Trigger", driverController.getRightTriggerAxis()); 
-    SmartDashboard.putBoolean("DriverController/A Button", driverController.getAButton());
-    SmartDashboard.putBoolean("DriverController/B Button", driverController.getBButton());
-    SmartDashboard.putBoolean("DriverController/X Button", driverController.getXButton());
-    SmartDashboard.putBoolean("DriverController/Y Button", driverController.getYButton());
-    SmartDashboard.putBoolean("DriverController/Left Bumper", driverController.getLeftBumper());
-    SmartDashboard.putBoolean("DriverController/Right Bumper", driverController.getRightBumper());
-    SmartDashboard.putBoolean("DriverController/Back Button", driverController.getBackButton());
-    SmartDashboard.putBoolean("DriverController/Start Button", driverController.getStartButton());
-    SmartDashboard.putBoolean("DriverController/Left Stick Button", driverController.getLeftStickButton());
-    SmartDashboard.putBoolean("DriverController/Right Stick Button", driverController.getRightStickButton()); 
+    SmartDashboard.putNumber("DriverController/joysticks/Left Stick Y", driverController.getLeftY());
+    SmartDashboard.putNumber("DriverController/joysticks/Left Stick X", driverController.getLeftX());
+    SmartDashboard.putNumber("DriverController/joysticks/Right Stick Y", driverController.getRightY());
+    SmartDashboard.putNumber("DriverController/joysticks/Right Stick X", driverController.getRightX());
+    SmartDashboard.putNumber("DriverController/triggers/Left Trigger", driverController.getLeftTriggerAxis());
+    SmartDashboard.putNumber("DriverController/triggers/Right Trigger", driverController.getRightTriggerAxis()); 
+    SmartDashboard.putBoolean("DriverController/buttons/A Button", driverController.getAButton());
+    SmartDashboard.putBoolean("DriverController/buttons/B Button", driverController.getBButton());
+    SmartDashboard.putBoolean("DriverController/buttons/X Button", driverController.getXButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Y Button", driverController.getYButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Left Bumper", driverController.getLeftBumperButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Right Bumper", driverController.getRightBumperButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Back Button", driverController.getBackButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Start Button", driverController.getStartButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Left Stick Button", driverController.getLeftStickButton());
+    SmartDashboard.putBoolean("DriverController/buttons/Right Stick Button", driverController.getRightStickButton());
     SmartDashboard.putNumber("DriverController/Pov", driverController.getPOV());
     SmartDashboard.putNumber("DriverController/Port", driverController.getPort());
     SmartDashboard.putNumber("DriverController/Axis Count", driverController.getAxisCount());
