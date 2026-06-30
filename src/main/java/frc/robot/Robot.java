@@ -51,14 +51,14 @@ public class Robot extends TimedRobot {
           .inverted(true);
       
       ballMotorConfig.apply(defaultConfig)
-          .inverted(false)
+          .inverted(true)
           .idleMode(IdleMode.kBrake)
           .openLoopRampRate(0.0)
-          .smartCurrentLimit(20);
+          .smartCurrentLimit(60);
   
       m_leftMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       m_rightMotor.configure(rightDriveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      m_ballMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      m_ballMotor.configure(ballMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       m_robotDrive = new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
   
       SendableRegistry.addChild(m_robotDrive, m_leftMotor);
@@ -82,17 +82,17 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
       // Drive with arcade style (use right stick to steer and left stick to drive)
-      //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+      m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
       //m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
-      m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
+     // m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
 
 
     // Use the triggers to control the ball motor
     
     if (driverController.getRightTriggerAxis() > 0.5) {
-      m_ballMotor.set(0.5);
+      m_ballMotor.set(-0.8);
     } else if (driverController.getLeftTriggerAxis() > 0.5) {
-      m_ballMotor.set(-0.5);
+      m_ballMotor.set(0.5);
     } else {
       m_ballMotor.set(0.0);
     }
