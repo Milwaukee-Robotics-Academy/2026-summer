@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
           .idleMode(IdleMode.kBrake)
           .openLoopRampRate(0.5)
           .voltageCompensation(12.0)
-          .smartCurrentLimit(20);
+          .smartCurrentLimit(30);
   
       // We need to invert one side of the drivetrain so that positive voltages
       // result in both sides moving forward. Depending on how your robot's
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
       // Drive with arcade style (use right stick to steer and left stick to drive)
-      m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getLeftX());
+      m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getRightX()*SPEED_LIMIT);
       //m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
      // m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
 
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
     // Use the triggers to control the ball motor
     
     if (driverController.getRightTriggerAxis() > 0.5) {
-      m_ballMotor.set(-0.8);
+      m_ballMotor.set(-0.6);
     } else if (driverController.getLeftTriggerAxis() > 0.5) {
       m_ballMotor.set(0.5);
     } else {
