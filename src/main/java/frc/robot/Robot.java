@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -22,10 +23,11 @@ import com.revrobotics.spark.config.SparkMaxConfig;
  * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
  * the code necessary to operate a robot with tank drive.
  */
+@Logged
 public class Robot extends TimedRobot {
+  
   private final DifferentialDrive m_robotDrive;
   private final XboxController driverController = new XboxController(0);
-
   private final SparkMax m_leftMotor = new SparkMax(1 , MotorType.kBrushless);
   private final SparkMax m_rightMotor = new SparkMax(2 , MotorType.kBrushless);
   private final SparkMax m_ballMotor = new SparkMax(3 , MotorType.kBrushless);
