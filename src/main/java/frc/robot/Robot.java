@@ -35,6 +35,15 @@ public class Robot extends TimedRobot {
     private final SparkMaxConfig defaultConfig = new SparkMaxConfig();
     private final SparkMaxConfig rightDriveConfig = new SparkMaxConfig();
     private final SparkMaxConfig ballMotorConfig = new SparkMaxConfig();
+
+        // 2. Define physical constants
+    private final double kGearRatio = 10.71; // 10.71 motor rotations per 1 wheel rotation
+    private final double kWheelDiameterInches = 4.0;
+    
+    // 3. Calculate distance traveled per 1 motor revolution
+    // Distance = (Wheel Circumference) / Gear Ratio
+    private final double kPositionConversionFactor = (Math.PI * kWheelDiameterInches) / kGearRatio;
+
   
     /** Called once at the beginning of the robot program. */
     public Robot() {
@@ -84,9 +93,9 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
       // Drive with arcade style (use right stick to steer and left stick to drive)
-      m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getRightX()*SPEED_LIMIT);
+      //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getRightX());
       //m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
-     // m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
+      m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
 
 
     // Use the triggers to control the ball motor
@@ -97,6 +106,30 @@ public class Robot extends TimedRobot {
       m_ballMotor.set(0.5);
     } else {
       m_ballMotor.set(0.0);
+    }
+
+  }
+
+  @Override
+  public void autonomousInit() {
+    m_leftMotor.getEncoder().setPosition(0);
+    m_rightMotor.getEncoder().setPosition(0);
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    // This function is called periodically during autonomous.
+
+
+    double aveEncoderCount = (m_leftMotor.getEncoder().getPosition()+m_rightMotor.getEncoder().getPosition())/2;
+    double distance = aveEncoderCount * kPositionConversionFactor; // Convert encoder counts to distance in inches
+
+    SmartDashboard.putNumber("Autonomous/Distance", distance);
+
+    if (distance < 12) {
+      m_robotDrive.arcadeDrive(0.5, 0); // Drive forward at half speed
+    } else {
+      m_robotDrive.arcadeDrive(0, 0); // Stop the robot
     }
 
   }
