@@ -101,6 +101,18 @@ public class Robot extends TimedRobot {
 
   }
 
+  @Override
+  public void autonomousInit() {
+    // This function is called once when autonomous mode is enabled.
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    // This function is called periodically during autonomous.
+  }
+
+
+
   public void updateSmartDashboard() {
     updateDriverControllerValues();
     // This method can be used to send data to the SmartDashboard for debugging purposes
