@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
           .inverted(true)
           .idleMode(IdleMode.kBrake)
           .openLoopRampRate(0.0)
-          .smartCurrentLimit(60);
+          .smartCurrentLimit(70);
   
       m_leftMotor.configure(defaultConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
       m_rightMotor.configure(rightDriveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -84,17 +84,17 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
       // Drive with arcade style (use right stick to steer and left stick to drive)
-      m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getRightX()*SPEED_LIMIT);
-      //m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
+      //m_robotDrive.arcadeDrive(-driverController.getLeftY(), -driverController.getRightX()*SPEED_LIMIT);
+      m_robotDrive.tankDrive(-driverController.getLeftY(),-driverController.getRightY());
      // m_robotDrive.arcadeDrive(driverController.getRightTriggerAxis()-driverController.getLeftTriggerAxis()*SPEED_LIMIT, -driverController.getRightY()*SPEED_LIMIT);
 
 
     // Use the triggers to control the ball motor
     
     if (driverController.getRightTriggerAxis() > 0.5) {
-      m_ballMotor.set(-0.6);
+      m_ballMotor.set(-0.8);
     } else if (driverController.getLeftTriggerAxis() > 0.5) {
-      m_ballMotor.set(0.5);
+      m_ballMotor.set(0.7);
     } else {
       m_ballMotor.set(0.0);
     }
